@@ -11,7 +11,6 @@ end
 require 'gtk3'
 require 'fileutils'
 require 'open-uri'
-require_relative 'archive'
 require_relative 'url_parser'
 
 class MainWindow < Gtk::Window
@@ -36,6 +35,11 @@ class MainWindow < Gtk::Window
         @name = @parser.get_file_name.gsub(/\.(tar(\...)?|zip)/, '')
         @label_name.set_markup "<b>Name:</b> #{@name}"
         @label_type.set_markup "<b>Type:</b> #{@parser.get_type}"
+
+        if @parser.get_file_type == :img
+            @label_type.set_markup "<b>Type:</b> Wallpaper"
+        end
+
         @label_size.set_markup "<b>Size:</b> #{@parser.get_size}"
         @label_type.xalign = 0
         @label_name.xalign = 0
@@ -74,10 +78,12 @@ class MainWindow < Gtk::Window
                     `tar -xf #{@dest} -C ~/.#{@parser.get_category}/`
                 when :tgz
                     `tar -xzf #{@dest} -C ~/.#{@parser.get_category}/`
+                when :img
+                    `cp #{@dest} ~/Pictures/`
                 else
                     puts "Unknown file"
-                    exit 1
             end
+            `rm #{@dest}`
             @label_stat.text = 'Done'
             @progress.fraction = 1
             @enable_btn.sensitive = true
@@ -86,6 +92,11 @@ class MainWindow < Gtk::Window
 
         @enable_btn = Gtk::Button.new(:label => "Enable")
         @enable_btn.signal_connect "clicked" do |_widget|
+            if @parser.get_file_type == :img
+                `gsettings set org.gnome.desktop.background picture-uri ~/Pictures/#{@parser.get_file_name}`
+                true
+            end
+
             if @parser.get_type.include? "Gtk"
                 `gsettings set 'org.gnome.desktop.interface' gtk-theme #{@name}`
             elsif @parser.get_type == "Cursor"

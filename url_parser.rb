@@ -20,9 +20,10 @@ class UrlParser
 
     def get_file_type
         # TODO: Add more file types
-        types = {'application/x-xz'  => :txz,
+        types = {'application/x-xz'   => :txz,
                  'application/zip'    => :zip,
-                 'application/x-gzip' => :tgz}
+                 'application/x-gzip' => :tgz,
+                 'image/png'          => :img}
 
         if types.include? @params[2][1]
             return types[@params[2][1]]
@@ -32,6 +33,7 @@ class UrlParser
             return :zip
         elsif get_file_name.include? '.tar.gz'
             return :tgz
+        end
     end
 
     def get_download_url
@@ -40,7 +42,12 @@ class UrlParser
 
     def get_size
         suffixes = ['B', 'KB' , 'MB' , 'GB' , 'TB']
-        s = Integer(@params[3][1])
+        s = 0
+        begin
+            s = Integer(@params[3][1])
+        rescue
+            return "Unknown"
+        end
         i = 0
         while s > 1024
             s /= 1024.0
@@ -50,11 +57,19 @@ class UrlParser
     end
 
     def get_type
+        if (get_file_type == :img)
+            return "Wallpaper"
+        end
         types = {'gtk3_themes'   => 'Gtk3 Theme',
                  'icons'         => 'Icon Theme',
                  'cursors'       => 'Cursor',
                  'gtk2_themes'   => 'Gtk2 Theme'}
-        types[@params[5][1]]
+        begin
+            types[@params[5][1]]
+        rescue
+            "Unknown"
+        end
+
     end
 
     def get_category
@@ -65,8 +80,3 @@ class UrlParser
         end
     end
 end
-
-
-
-
-
