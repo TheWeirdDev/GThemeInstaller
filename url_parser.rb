@@ -47,6 +47,14 @@ class UrlParser
                  'gtk2_themes'   => 'Gtk2 Theme'}
         types[@params[5][1]]
     end
+
+    def get_category
+        if @params[5][1].include? 'theme'
+            return "themes"
+        else
+            return "icons"
+        end
+    end
 end
 
 
