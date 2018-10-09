@@ -1,0 +1,10 @@
+[Desktop Entry]
+Exec=gthemeinstaller %U
+GenericName=Gnome Theme installer
+Icon=application-x-executable
+MimeType=x-scheme-handler/ocs;
+Name=GThemeinstaller
+Terminal=false
+Type=Application
+StartupNotify=false
+Keywords=gnome;theme;installer;gtk;icon;cursor;wallpaper;
