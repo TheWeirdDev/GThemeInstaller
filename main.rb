@@ -33,7 +33,7 @@ class MainWindow < Gtk::Window
         @label_size = Gtk::Label.new()
         @label_stat = Gtk::Label.new()
 
-        @name = @parser.get_file_name.gsub(/\.(tar\...|zip)/, '')
+        @name = @parser.get_file_name.gsub(/\.(tar(\...)?|zip)/, '')
         @label_name.set_markup "<b>Name:</b> #{@name}"
         @label_type.set_markup "<b>Type:</b> #{@parser.get_type}"
         @label_size.set_markup "<b>Size:</b> #{@parser.get_size}"
@@ -72,9 +72,11 @@ class MainWindow < Gtk::Window
                     puts 'zip'
                 when :txz
                     `tar -xf #{@dest} -C ~/.#{@parser.get_category}/`
-                    puts 'tar.xz'
+                when :tgz
+                    `tar -xzf #{@dest} -C ~/.#{@parser.get_category}/`
                 else
                     puts "Unknown file"
+                    exit 1
             end
             @label_stat.text = 'Done'
             @progress.fraction = 1

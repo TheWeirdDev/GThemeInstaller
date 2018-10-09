@@ -21,8 +21,17 @@ class UrlParser
     def get_file_type
         # TODO: Add more file types
         types = {'application/x-xz'  => :txz,
-                 'application/zip'    => :zip}
-        types[@params[2][1]]
+                 'application/zip'    => :zip,
+                 'application/x-gzip' => :tgz}
+
+        if types.include? @params[2][1]
+            return types[@params[2][1]]
+        elsif get_file_name.include? 'tar.xz'
+            return :txz
+        elsif get_file_name.include? '.zip'
+            return :zip
+        elsif get_file_name.include? '.tar.gz'
+            return :tgz
     end
 
     def get_download_url
