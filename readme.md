@@ -1,3 +1,4 @@
+# THIS PROJECT IS DEPRECATED, DO NOT USE
 # GThemeInstaller (GUI)
 
 Install themes, icons and wallpapers from gnome-looks.org with just a click
